@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorry Message</title>
+    <style>
+        body {
+            background-color: lightblue;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .image-container img {
+            width: 450px;
+            height: auto;
+            animation: bounceZoom 2s infinite ease-in-out;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 10px;
+            transition: transform 0.2s ease-in-out, box-shadow 0.3s;
+        }
+
+        .accept {
+            background-color: green;
+            color: white;
+            box-shadow: 0 0 10px green;
+        }
+
+        .decline {
+            background-color: red;
+            color: white;
+            box-shadow: 0 0 10px red;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px white;
+        }
+
+        @keyframes bounceZoom {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Floating Hearts */
+        .heart {
+            position: absolute;
+            bottom: 0;
+            font-size: 30px;
+            animation: floatUp 4s linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        /* Falling Broken Hearts */
+        .broken-heart {
+            position: absolute;
+            top: 0;
+            font-size: 30px;
+            animation: fallDown 4s linear forwards;
+            opacity: 0.8;
+        }
+
+        @keyframes fallDown {
+            0% { transform: translateY(-5vh); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="image-container">
+        <img src="SORRY-removebg-preview.png" alt="Sorry Heart">
+    </div>
+    
+    <div class="buttons">
+        <button class="accept" onclick="playHappySong(); speedUpHearts();">Accept</button>
+        <button class="decline" onclick="playSadSong(); stopFloatingHearts(); createBrokenHearts();">Decline</button>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="happySong" src="WhatsApp Audio 2025-02-18 at 10.06.02_cd999003.waptt (online-audio-converter.com).mp3"></audio>
+    <audio id="sadSong" src="WhatsApp Audio 2025-02-18 at 10.41.59_fe6cf13e.mp3"></audio>
+
+    <script>
+        let heartInterval;
+        let floatingHearts = [];
+
+        function createFloatingHearts() {
+            heartInterval = setInterval(() => {
+                let heart = document.createElement("div");
+                heart.innerHTML = "❤️";
+                heart.classList.add("heart");
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
+                document.body.appendChild(heart);
+                floatingHearts.push(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                    floatingHearts = floatingHearts.filter(h => h !== heart);
+                }, 4000);
+            }, 500);
+        }
+
+        function speedUpHearts() {
+            document.querySelectorAll('.heart').forEach(heart => {
+                heart.style.animationDuration = "2s";
+            });
+        }
+
+        function stopFloatingHearts() {
+            clearInterval(heartInterval); // Stop new hearts from being created
+            floatingHearts.forEach(heart => heart.remove()); // Remove existing hearts
+            floatingHearts = [];
+        }
+
+        function createBrokenHearts() {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    let brokenHeart = document.createElement("div");
+                    brokenHeart.innerHTML = "💔";
+                    brokenHeart.classList.add("broken-heart");
+                    brokenHeart.style.left = Math.random() * 100 + "vw";
+                    brokenHeart.style.animationDuration = (Math.random() * 2 + 3) + "s";
+                    document.body.appendChild(brokenHeart);
+
+                    setTimeout(() => {
+                        brokenHeart.remove();
+                    }, 4000);
+                }, i * 200);
+            }
+        }
+
+        function playHappySong() {
+            document.getElementById("sadSong").pause();
+            document.getElementById("happySong").currentTime = 0;
+            document.getElementById("happySong").play();
+        }
+
+        function playSadSong() {
+            document.getElementById("happySong").pause();
+            document.getElementById("sadSong").currentTime = 0;
+            document.getElementById("sadSong").play();
+        }
+
+        window.onload = createFloatingHearts;
+    </script>
+</body>
+</html>
